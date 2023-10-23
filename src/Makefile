@@ -10,7 +10,7 @@ CFLAGS=-I$(IDIR)
 
 # The cpp files are dependent on these include files
 # patsubst adds the directory structure before the filename
-_DEPS=raytracer.h vec3.h
+_DEPS=raytracerFunctions.h vec3.h
 DEPS=$(patsubst %,$(IDIR)/%,$(_DEPS))
 
 # The object files

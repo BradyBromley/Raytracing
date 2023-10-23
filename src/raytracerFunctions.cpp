@@ -1,8 +1,11 @@
 #include <iostream>
 #include <fstream>
-#include "raytracer.h"
+#include "raytracerFunctions.h"
 using namespace std;
 
+void writeColour(ofstream &imageFile, int red, int green, int blue) {
+    imageFile << red << ' ' << green << ' ' << blue << '\n';
+}
 
 void render() {
     // Creating ppm file format
@@ -18,6 +21,7 @@ void render() {
     for (int j = 0; j < imageHeight; j++) {
         clog << "\rScanlines remaining: " << (imageHeight - j) << flush;
         for (int i = 0; i < imageWidth; i++) {
+            writeColour(imageFile, i, j, 0);
             /*
             auto r = double(i) / (imageWidth-1);
             auto g = double(j) / (imageHeight-1);
@@ -27,8 +31,6 @@ void render() {
             int ig = static_cast<int>(255.999 * g);
             int ib = static_cast<int>(255.999 * b);
             */
-
-            imageFile << i << ' ' << j << ' ' << 0 << '\n';
         }
     }
 
@@ -37,5 +39,4 @@ void render() {
     clog << "\rDone.                   \n";
 
     return;
-
 }
