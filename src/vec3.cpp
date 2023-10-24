@@ -28,6 +28,9 @@ float Vec3::getZ() {
     return e[2];
 }
 
+float Vec3::operator[](const int i) {
+    return e[i];
+}
 
 // Vector Operations
 Vec3 Vec3::operator+(const Vec3 &v) {
@@ -133,4 +136,11 @@ float Vec3::length() {
 
 Vec3 Vec3::unitVector() {
     return *this / (*this).length();
+}
+
+
+// The non-member function << needs access to Vec3's private members
+ostream& operator<<(ostream &stream, Vec3 &v) {
+    stream << v.getX() << ' ' << v.getY() << ' ' << v.getZ() << endl;
+    return stream;
 }
