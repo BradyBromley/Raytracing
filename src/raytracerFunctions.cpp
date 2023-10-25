@@ -1,36 +1,68 @@
 #include <iostream>
 #include <fstream>
 #include "raytracerFunctions.h"
+
 using namespace std;
 
-void writeColour(ofstream &imageFile, int red, int green, int blue) {
-    imageFile << red << ' ' << green << ' ' << blue << '\n';
+const int MAX_COLOUR = 255;
+
+// Blend the colour based on the height of the y coordinate
+// The output is colour values from [0,0,0] to [1,1,1]
+Colour3 rayColour(Ray r) {
+    Vec3 unitDirection = r.getDirection().unitVector();
+    float a = 0.5*(unitDirection.getY() + 1.0);
+    return Colour3(1.0, 1.0, 1.0)*(1.0 - a) + Colour3(0.5, 0.7, 1.0)*(a);
+}
+
+// Scale colours to the correct size and output them to the image file
+void writeColour(ofstream &imageFile, Colour3 pixelColour) {
+    imageFile << static_cast<int>(MAX_COLOUR*pixelColour.getX())
+    << ' ' << static_cast<int>(MAX_COLOUR*pixelColour.getY())
+    << ' ' << static_cast<int>(MAX_COLOUR*pixelColour.getZ())
+    << '\n';
 }
 
 void render() {
-    // Creating ppm file format
-    int imageWidth = 256;
-    int imageHeight = 256;
+    // Setting up the image based on an aspect ratio and a width
+    float aspectRatio = 16.0 / 9.0;
+    int imageWidth = 400;
+    int imageHeight = static_cast<int>(imageWidth / aspectRatio);
+    imageHeight = (imageHeight < 1) ? 1 : imageHeight;
 
+    // Set up the viewport and the camera in front of it
+    float viewportHeight = 2.0;
+    float viewportWidth = viewportHeight * static_cast<int>(imageWidth / imageHeight);
+    float focalLength = 1.0;
+    Point3 cameraCenter = Point3(0, 0, 0);
+
+    // These are the vectors across the viewport's edges
+    // Since the y-axis for the viewport goes from top to bottom, it is negative
+    Vec3 viewportU = Vec3(viewportWidth, 0, 0);
+    Vec3 viewportV = Vec3(0, -viewportHeight, 0);
+
+    // These are the vectors across the edges of a single pixel
+    Vec3 pixelU = viewportU / imageWidth;
+    Vec3 pixelV = viewportV / imageHeight;
+
+    // Calculate the location of the top left pixel (The center of the pixel is needed)
+    Point3 viewportOrigin = cameraCenter - (viewportU/2) - (viewportV/2) - Point3(0, 0, focalLength);
+    Point3 pixelOrigin = viewportOrigin + (pixelU/2) + (pixelV/2);
+
+    // Open the image file and define ASCII colours, width, height, and max color
     ofstream imageFile;
     imageFile.open("image.ppm");
+    imageFile << "P3\n" << imageWidth << ' ' << imageHeight << '\n' << MAX_COLOUR << '\n';
 
-    // Define ASCII colours, width, height, and max color
-    imageFile << "P3\n" << imageWidth << ' ' << imageHeight << "\n255\n";
-
+    // Draw the image
     for (int j = 0; j < imageHeight; j++) {
         clog << "\rScanlines remaining: " << (imageHeight - j) << flush;
         for (int i = 0; i < imageWidth; i++) {
-            writeColour(imageFile, i, j, 0);
-            /*
-            auto r = double(i) / (imageWidth-1);
-            auto g = double(j) / (imageHeight-1);
-            auto b = 0;
+            // Find the ray going from the camera to the pixel
+            Point3 pixelCenter = pixelOrigin + (pixelU*i) + (pixelV*j);
+            Vec3 rayDirection = pixelCenter - cameraCenter;
+            Ray r(cameraCenter, rayDirection);
 
-            int ir = static_cast<int>(255.999 * r);
-            int ig = static_cast<int>(255.999 * g);
-            int ib = static_cast<int>(255.999 * b);
-            */
+            writeColour(imageFile, rayColour(r));
         }
     }
 

@@ -7,8 +7,8 @@ using namespace std;
 int main() {
     render();
 
-    Vec3 v1(4,5,6);
-    Vec3 v2(10,20,30);
+    Point3 v1(4,5,6);
+    Point3 v2(10,20,30);
     cout << v1;
     cout << v2;
 
