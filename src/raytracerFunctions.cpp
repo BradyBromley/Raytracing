@@ -50,7 +50,7 @@ void render() {
 
     // Open the image file and define ASCII colours, width, height, and max color
     ofstream imageFile;
-    imageFile.open("image.ppm");
+    imageFile.open("../img/image.ppm");
     imageFile << "P3\n" << imageWidth << ' ' << imageHeight << '\n' << MAX_COLOUR << '\n';
 
     // Draw the image
