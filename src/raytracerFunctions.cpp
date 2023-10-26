@@ -6,16 +6,33 @@ using namespace std;
 
 const int MAX_COLOUR = 255;
 
+// Check if a ray intersects with a sphere
+bool intersection(const Point3 &sphereCenter, float radius, const Ray &r) {
+    Vec3 rayPoint = r.getPoint();
+    Vec3 rayDirection = r.getDirection();
+
+    // Get a,b,c values for the quadratic equation
+    float a = dot(rayDirection, rayDirection);
+    float b = 2 * dot(rayDirection, rayPoint - sphereCenter);
+    float c = dot(rayPoint - sphereCenter, rayPoint - sphereCenter) - (radius * radius);
+    float discriminant = (b * b) - (4 * a * c);
+    return (discriminant >= 0);
+}
+
 // Blend the colour based on the height of the y coordinate
 // The output is colour values from [0,0,0] to [1,1,1]
-Colour3 rayColour(Ray r) {
-    Vec3 unitDirection = r.getDirection().unitVector();
+Colour3 rayColour(const Ray &r) {
+    if (intersection(Point3(0, 0, -1), 0.5, r)) {
+        return Colour3(1.0, 0, 0);
+    }
+
+    Vec3 unitDirection = unitVector(r.getDirection());
     float a = 0.5*(unitDirection.getY() + 1.0);
     return Colour3(1.0, 1.0, 1.0)*(1.0 - a) + Colour3(0.5, 0.7, 1.0)*(a);
 }
 
 // Scale colours to the correct size and output them to the image file
-void writeColour(ofstream &imageFile, Colour3 pixelColour) {
+void writeColour(ofstream &imageFile, const Colour3 &pixelColour) {
     imageFile << static_cast<int>(MAX_COLOUR*pixelColour.getX())
     << ' ' << static_cast<int>(MAX_COLOUR*pixelColour.getY())
     << ' ' << static_cast<int>(MAX_COLOUR*pixelColour.getZ())
@@ -31,7 +48,7 @@ void render() {
 
     // Set up the viewport and the camera in front of it
     float viewportHeight = 2.0;
-    float viewportWidth = viewportHeight * static_cast<int>(imageWidth / imageHeight);
+    float viewportWidth = viewportHeight * (static_cast<float>(imageWidth) / imageHeight);
     float focalLength = 1.0;
     Point3 cameraCenter = Point3(0, 0, 0);
 
@@ -58,7 +75,7 @@ void render() {
         clog << "\rScanlines remaining: " << (imageHeight - j) << flush;
         for (int i = 0; i < imageWidth; i++) {
             // Find the ray going from the camera to the pixel
-            Point3 pixelCenter = pixelOrigin + (pixelU*i) + (pixelV*j);
+            Point3 pixelCenter = pixelOrigin + (i*pixelU) + (j*pixelV);
             Vec3 rayDirection = pixelCenter - cameraCenter;
             Ray r(cameraCenter, rayDirection);
 

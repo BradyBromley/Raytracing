@@ -4,21 +4,23 @@
 Ray::Ray() {
 }
 
-Ray::Ray(Point3 p, Vec3 d) {
+Ray::Ray(const Point3 &p, const Vec3 &d) {
     point = p;
     direction = d;
 }
 
+
 // Getters
-Point3 Ray::getPoint() {
+Point3 Ray::getPoint() const {
     return point;
 }
 
-Vec3 Ray::getDirection() {
+Vec3 Ray::getDirection() const {
     return direction;
 }
 
+
 // Other Methods
-Point3 Ray::at(float t) {
-    return point + direction*t;
+Point3 Ray::at(float t) const {
+    return point + t*direction;
 }

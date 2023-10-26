@@ -11,14 +11,14 @@ class Ray {
 
         // Constructors
         Ray();
-        Ray(Point3 p, Vec3 d);
+        Ray(const Point3 &p, const Vec3 &d);
 
         // Getters
-        Point3 getPoint();
-        Vec3 getDirection();
+        Point3 getPoint() const;
+        Vec3 getDirection() const;
 
         // Methods
-        Point3 at(float t);
+        Point3 at(float t) const;
 
 };
 

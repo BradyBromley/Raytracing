@@ -7,9 +7,11 @@
 
 using namespace std;
 
-Colour3 rayColour(Ray r);
+bool intersection(const Point3 &sphereCenter, float radius, const Ray &r);
 
-void writeColour(ofstream &imageFile, Colour3 pixelColour);
+Colour3 rayColour(const Ray &r);
+
+void writeColour(ofstream &imageFile, const Colour3 &pixelColour);
 
 void render();
 
