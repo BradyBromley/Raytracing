@@ -1,29 +1,20 @@
 #include <iostream>
 #include <fstream>
 #include "raytracerFunctions.h"
+#include <cmath>
 
 using namespace std;
 
 const int MAX_COLOUR = 255;
 
-// Check if a ray intersects with a sphere
-bool intersection(const Point3 &sphereCenter, float radius, const Ray &r) {
-    Vec3 rayPoint = r.getPoint();
-    Vec3 rayDirection = r.getDirection();
-
-    // Get a,b,c values for the quadratic equation
-    float a = dot(rayDirection, rayDirection);
-    float b = 2 * dot(rayDirection, rayPoint - sphereCenter);
-    float c = dot(rayPoint - sphereCenter, rayPoint - sphereCenter) - (radius * radius);
-    float discriminant = (b * b) - (4 * a * c);
-    return (discriminant >= 0);
-}
-
-// Blend the colour based on the height of the y coordinate
-// The output is colour values from [0,0,0] to [1,1,1]
+// The output is a colour value from [0,0,0] to [1,1,1]
 Colour3 rayColour(const Ray &r) {
-    if (intersection(Point3(0, 0, -1), 0.5, r)) {
-        return Colour3(1.0, 0, 0);
+    // Check if the ray hits the sphere
+    Sphere sphere(Point3(0, 0, -1), 0.5);
+    HitRecord record;
+    bool hit = sphere.intersect(r, 0, 1000000, record);
+    if (hit) {
+        return Colour3(record.normal.getX() + 1, record.normal.getY() + 1, record.normal.getZ() + 1)/2;
     }
 
     Vec3 unitDirection = unitVector(r.getDirection());

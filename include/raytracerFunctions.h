@@ -2,12 +2,11 @@
 #define RAYTRACER_FUNCTIONS_H
 
 #include <fstream>
-#include "vec3.h"
-#include "ray.h"
+#include "sphere.h"
 
 using namespace std;
 
-bool intersection(const Point3 &sphereCenter, float radius, const Ray &r);
+//float intersection(const Point3 &sphereCenter, float radius, const Ray &r);
 
 Colour3 rayColour(const Ray &r);
 

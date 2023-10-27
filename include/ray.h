@@ -17,7 +17,7 @@ class Ray {
         Point3 getPoint() const;
         Vec3 getDirection() const;
 
-        // Methods
+        // Other Methods
         Point3 at(float t) const;
 
 };
