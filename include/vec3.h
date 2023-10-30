@@ -20,6 +20,7 @@ class Vec3 {
         float operator[](int i);
 
         // Vector Operations
+        Vec3 operator-() const;
         Vec3 operator+=(const Vec3 &v);
         Vec3 operator-=(const Vec3 &v);
         Vec3 operator*=(float s);

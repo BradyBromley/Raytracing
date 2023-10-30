@@ -52,9 +52,9 @@ bool Sphere::intersect(const Ray &r, float tMin, float tMax, HitRecord &record) 
     }
 
     // Record where the ray hit, the normal at that point, and the t value used
-    record.point = r.at(smallestRoot);
-    record.normal = unitVector(r.at(smallestRoot) - center);
     record.t = smallestRoot;
+    record.point = r.at(smallestRoot);
+    record.setFaceNormal(r, unitVector(r.at(smallestRoot) - center));
 
     return true;
 }

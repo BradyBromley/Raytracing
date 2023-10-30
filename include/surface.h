@@ -2,13 +2,7 @@
 #define SURFACE_H
 
 #include "ray.h"
-
-class HitRecord {
-    public:
-        Point3 point;
-        Vec3 normal;
-        float t;
-};
+#include "hitRecord.h"
 
 class Surface {
     public:

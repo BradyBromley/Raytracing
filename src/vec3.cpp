@@ -34,6 +34,10 @@ float Vec3::operator[](const int i) {
 
 
 // Vector Operations
+Vec3 Vec3::operator-() const {
+    return Vec3(-e[0], -e[1], -e[2]);
+}
+
 Vec3 Vec3::operator+=(const Vec3 &v) {
     e[0] += v.e[0];
     e[1] += v.e[1];
