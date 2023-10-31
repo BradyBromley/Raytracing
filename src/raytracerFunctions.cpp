@@ -1,20 +1,15 @@
 #include <iostream>
 #include <fstream>
-#include "raytracerFunctions.h"
 #include <cmath>
-
-using namespace std;
-
-const int MAX_COLOUR = 255;
+#include "raytracerFunctions.h"
 
 // The output is a colour value from [0,0,0] to [1,1,1]
-Colour3 rayColour(const Ray &r) {
-    // Check if the ray hits the sphere
-    Sphere sphere(Point3(0, 0, -1), 0.5);
+Colour3 rayColour(const Ray &r, const Surface &s) {
+    
+    // Check if the ray hits the surface
     HitRecord record;
-    bool hit = sphere.intersect(r, 0, 1000000, record);
-    if (hit) {
-        return Colour3(record.normal.getX() + 1, record.normal.getY() + 1, record.normal.getZ() + 1)/2;
+    if (s.intersect(r, Interval(0, infinity), record)) {
+        return 0.5 * (record.normal + Colour3(1,1,1));
     }
 
     Vec3 unitDirection = unitVector(r.getDirection());
@@ -24,9 +19,9 @@ Colour3 rayColour(const Ray &r) {
 
 // Scale colours to the correct size and output them to the image file
 void writeColour(ofstream &imageFile, const Colour3 &pixelColour) {
-    imageFile << static_cast<int>(MAX_COLOUR*pixelColour.getX())
-    << ' ' << static_cast<int>(MAX_COLOUR*pixelColour.getY())
-    << ' ' << static_cast<int>(MAX_COLOUR*pixelColour.getZ())
+    imageFile << static_cast<int>(maxColour*pixelColour.getX())
+    << ' ' << static_cast<int>(maxColour*pixelColour.getY())
+    << ' ' << static_cast<int>(maxColour*pixelColour.getZ())
     << '\n';
 }
 
@@ -36,6 +31,12 @@ void render() {
     int imageWidth = 400;
     int imageHeight = static_cast<int>(imageWidth / aspectRatio);
     imageHeight = (imageHeight < 1) ? 1 : imageHeight;
+
+    // Surface
+    SurfaceList sList;
+    sList.add(make_shared<Sphere>(Point3(0,0,-1), 0.5));
+    sList.add(make_shared<Sphere>(Point3(0,-100.5,-1), 100));
+
 
     // Set up the viewport and the camera in front of it
     float viewportHeight = 2.0;
@@ -59,7 +60,7 @@ void render() {
     // Open the image file and define ASCII colours, width, height, and max color
     ofstream imageFile;
     imageFile.open("../img/image.ppm");
-    imageFile << "P3\n" << imageWidth << ' ' << imageHeight << '\n' << MAX_COLOUR << '\n';
+    imageFile << "P3\n" << imageWidth << ' ' << imageHeight << '\n' << maxColour << '\n';
 
     // Draw the image
     for (int j = 0; j < imageHeight; j++) {
@@ -70,7 +71,7 @@ void render() {
             Vec3 rayDirection = pixelCenter - cameraCenter;
             Ray r(cameraCenter, rayDirection);
 
-            writeColour(imageFile, rayColour(r));
+            writeColour(imageFile, rayColour(r, sList));
         }
     }
 

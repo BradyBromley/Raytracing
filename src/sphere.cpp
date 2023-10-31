@@ -25,7 +25,7 @@ float Sphere::getRadius() const {
 
 
 // Other Methods
-bool Sphere::intersect(const Ray &r, float tMin, float tMax, HitRecord &record) {
+bool Sphere::intersect(const Ray &r, Interval interval, HitRecord &record) const {
     Vec3 rayPointMinusSphereCenter = r.getPoint() - center;
 
     // Get a,b,c values for the quadratic equation
@@ -41,12 +41,12 @@ bool Sphere::intersect(const Ray &r, float tMin, float tMax, HitRecord &record) 
         return false;
     }
 
-    // The sphere doesn't count as being intersected if the t value is out of range
+    // The sphere doesn't count as being intersected outside of the interval
     float discriminantSqrt = sqrt(discriminant);
     float smallestRoot = (-halfB - discriminantSqrt) / a;
-    if ((smallestRoot < tMin) || (smallestRoot > tMax)) {
+    if (!interval.surrounds(smallestRoot)) {
         smallestRoot = (-halfB + discriminantSqrt) / a;
-        if ((smallestRoot < tMin) || (smallestRoot > tMax)) {
+        if (!interval.surrounds(smallestRoot)) {
             return false;
         }
     }

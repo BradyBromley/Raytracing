@@ -16,13 +16,14 @@ void SurfaceList::add(shared_ptr<Surface> object) {
     objects.push_back(object);
 }
 
-bool SurfaceList::intersect(const Ray &r, float tMin, float tMax, HitRecord &record) {
+bool SurfaceList::intersect(const Ray &r, Interval interval, HitRecord &record) const {
     HitRecord tempRecord;
     bool intersectAnything = false;
-    float closestObject = tMax;
+    float closestObject = interval.max;
     
+    // Find the first object that is hit by the ray
     for (shared_ptr<Surface> object : objects) {
-        if (object->intersect(r, tMin, closestObject, tempRecord)) {
+        if (object->intersect(r, Interval(interval.min, closestObject), tempRecord)) {
             intersectAnything = true;
             closestObject = tempRecord.t;
             record = tempRecord;

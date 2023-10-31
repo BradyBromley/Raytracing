@@ -1,14 +1,21 @@
 #ifndef RAYTRACER_FUNCTIONS_H
 #define RAYTRACER_FUNCTIONS_H
 
+// Headers
 #include <fstream>
+#include "constants.h"
+#include "vec3.h"
+#include "ray.h"
+#include "hitRecord.h"
+#include "surface.h"
 #include "sphere.h"
+#include "surfaceList.h"
 
+// Using
 using namespace std;
 
-//float intersection(const Point3 &sphereCenter, float radius, const Ray &r);
-
-Colour3 rayColour(const Ray &r);
+// Functions
+Colour3 rayColour(const Ray &r, const Surface &s);
 
 void writeColour(ofstream &imageFile, const Colour3 &pixelColour);
 

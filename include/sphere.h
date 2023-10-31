@@ -1,8 +1,17 @@
 #ifndef SPHERE_H
 #define SPHERE_H
 
+// Headers
+#include "vec3.h"
+#include "ray.h"
+#include "hitRecord.h"
 #include "surface.h"
+#include "interval.h"
 
+// Using
+using namespace std;
+
+// Class
 class Sphere : public Surface {
     private:
         Point3 center;
@@ -18,7 +27,7 @@ class Sphere : public Surface {
         float getRadius() const;
 
         // Other Methods
-        bool intersect(const Ray &r, float tMin, float tMax, HitRecord &record) override;
+        bool intersect(const Ray &r, Interval interval, HitRecord &record) const override;
 };
 
 #endif

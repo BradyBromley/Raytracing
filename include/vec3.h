@@ -1,9 +1,13 @@
 #ifndef VEC3_H
 #define VEC3_H
 
+// Headers
 #include <iostream>
+
+// Using
 using namespace std;
 
+// Class
 class Vec3 {
     private:
         float e[3];
@@ -43,11 +47,11 @@ class Vec3 {
         Vec3 friend operator/(const Vec3 &v, float s);
 };
 
-// Different aliases for clarity
+// Aliases
 using Point3 = Vec3;
 using Colour3 = Vec3;
 
-// Other non-member functions
+// Functions
 float dot(const Vec3 &u, const Vec3 &v);
 Vec3 cross(const Vec3 &u, const Vec3 &v);
 Vec3 unitVector(const Vec3 &v);

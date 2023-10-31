@@ -1,8 +1,13 @@
 #ifndef RAY_H
 #define RAY_H
 
+// Headers
 #include "vec3.h"
 
+// Using
+using namespace std;
+
+// Class
 class Ray {
     private:
         Point3 point;

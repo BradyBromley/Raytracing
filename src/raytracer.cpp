@@ -1,6 +1,7 @@
 #include <iostream>
-#include "raytracerFunctions.h"
+#include "vec3.h"
 #include "ray.h"
+#include "raytracerFunctions.h"
 using namespace std;
 
 int main() {
