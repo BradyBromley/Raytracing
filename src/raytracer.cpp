@@ -1,11 +1,22 @@
 #include <iostream>
+#include "constants.h"
 #include "vec3.h"
 #include "ray.h"
-#include "raytracerFunctions.h"
+#include "surface.h"
+#include "sphere.h"
+#include "surfaceList.h"
+#include "camera.h"
+
 using namespace std;
 
 int main() {
-    render();
+    // Surface
+    SurfaceList sList;
+    sList.add(make_shared<Sphere>(Point3(0,0,-1), 0.5));
+    sList.add(make_shared<Sphere>(Point3(0,-100.5,-1), 100));
+
+    Camera camera(16.0 / 9.0, 400, 2.0, 1.0, Point3(0, 0, 0));
+    camera.render(sList);
 
     Point3 v1(4,5,6);
     Point3 v2(10,20,30);
