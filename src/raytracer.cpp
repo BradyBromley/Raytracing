@@ -1,5 +1,5 @@
 #include <iostream>
-#include "constants.h"
+#include "utility.h"
 #include "vec3.h"
 #include "ray.h"
 #include "surface.h"
@@ -15,7 +15,7 @@ int main() {
     sList.add(make_shared<Sphere>(Point3(0,0,-1), 0.5));
     sList.add(make_shared<Sphere>(Point3(0,-100.5,-1), 100));
 
-    Camera camera(16.0 / 9.0, 400, 2.0, 1.0, Point3(0, 0, 0));
+    Camera camera(16.0 / 9.0, 400, 2.0, 1.0, Point3(0, 0, 0), 100);
     camera.render(sList);
 
     Point3 v1(4,5,6);
@@ -29,6 +29,9 @@ int main() {
     Vec3 v4 = r2.at(1);
     cout << v3;
     cout << v4;
+
+    cout << randomFloat() << endl;
+    cout << randomFloat() << endl;
 
     return 0;
 }

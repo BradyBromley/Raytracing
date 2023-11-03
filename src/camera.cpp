@@ -11,9 +11,10 @@ Camera::Camera() {
     viewportWidth = viewportHeight * (static_cast<float>(imageWidth) / imageHeight);
     focalLength = 1.0;
     cameraCenter = Point3(0, 0, 0);
+    samplesPerPixel = 10;
 }
 
-Camera::Camera(float aRatio, int iWidth, float vHeight, float fLength, Point3 cCenter) {
+Camera::Camera(float aRatio, int iWidth, float vHeight, float fLength, Point3 cCenter, int samples) {
     aspectRatio = aRatio;
     imageWidth = iWidth;
     imageHeight = static_cast<int>(imageWidth / aspectRatio);
@@ -23,6 +24,7 @@ Camera::Camera(float aRatio, int iWidth, float vHeight, float fLength, Point3 cC
     viewportWidth = viewportHeight * (static_cast<float>(imageWidth) / imageHeight);
     focalLength = fLength;
     cameraCenter = cCenter;
+    samplesPerPixel = samples;
 }
 
 
@@ -57,10 +59,31 @@ Colour3 Camera::rayColour(const Ray &r, const Surface &s) {
 }
 
 void Camera::writeColour(ofstream &imageFile, const Colour3 &pixelColour) {
-    imageFile << static_cast<int>(maxColour*pixelColour.getX())
-    << ' ' << static_cast<int>(maxColour*pixelColour.getY())
-    << ' ' << static_cast<int>(maxColour*pixelColour.getZ())
+    // Make sure that the colour has values in [0, 1)
+    Interval interval(0.000, 0.999);
+
+    imageFile << static_cast<int>(maxColour*interval.clamp(pixelColour.getX()))
+    << ' ' << static_cast<int>(maxColour*interval.clamp(pixelColour.getY()))
+    << ' ' << static_cast<int>(maxColour*interval.clamp(pixelColour.getZ()))
     << '\n';
+}
+
+Vec3 Camera::pixelSampleSquare() const {
+    // Take random colour samples from around the pixel
+    float x = -0.5 + randomFloat();
+    float y = -0.5 + randomFloat();
+    return (x*pixelU) + (y*pixelV);
+}
+
+Ray Camera::getRay(int i, int j) const {
+    // Find the center of the the pixel that the ray goes through
+    Point3 pixelCenter = pixelOrigin + (i*pixelU) + (j*pixelV);
+    // Add some randomness so that every sample is slightly different
+    Point3 pixelSample = pixelCenter + pixelSampleSquare();
+
+    Vec3 rayDirection = pixelSample - cameraCenter;
+    return Ray(cameraCenter, rayDirection);
+
 }
 
 
@@ -77,13 +100,17 @@ void Camera::render(const Surface& surface) {
     for (int j = 0; j < imageHeight; j++) {
         clog << "\rScanlines remaining: " << (imageHeight - j) << flush;
         for (int i = 0; i < imageWidth; i++) {
-            // Find the ray going from the camera to the pixel
-            Point3 pixelCenter = pixelOrigin + (i*pixelU) + (j*pixelV);
-            Vec3 rayDirection = pixelCenter - cameraCenter;
-            Ray r(cameraCenter, rayDirection);
 
-            writeColour(imageFile, rayColour(r, surface));
+            // Take random samples around the pixel and average the resulting colour values
+            // This is done for anti-aliasing
+            Colour3 cumulativeColour(0,0,0);
+            for (int sample = 0; sample < samplesPerPixel; ++sample) {
+                Ray r = getRay(i, j);
+                cumulativeColour += rayColour(r, surface);
+            }
+            writeColour(imageFile, cumulativeColour/samplesPerPixel);
         }
+        
     }
 
     imageFile.close();

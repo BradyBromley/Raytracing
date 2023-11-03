@@ -15,8 +15,9 @@ class Interval {
         Interval(float m, float M);
 
         // Methods
-        bool contains(float value);
-        bool surrounds(float value);
+        bool contains(float value) const;
+        bool surrounds(float value) const;
+        float clamp(float value) const;
 };
 
 #endif

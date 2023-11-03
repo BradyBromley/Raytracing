@@ -4,7 +4,7 @@
 // Headers
 #include <iostream>
 #include <fstream>
-#include "constants.h"
+#include "utility.h"
 #include "vec3.h"
 #include "ray.h"
 #include "hitRecord.h"
@@ -26,16 +26,19 @@ class Camera {
         Vec3 viewportU, viewportV;
         Vec3 pixelU, pixelV;
         Point3 pixelOrigin;
+        int samplesPerPixel;
 
         // Private Methods
         void initialize();
         Colour3 rayColour(const Ray &r, const Surface &s);
         void writeColour(ofstream &imageFile, const Colour3 &pixelColour);
+        Vec3 pixelSampleSquare() const;
+        Ray getRay(int i, int j) const;
 
     public:
         // Constructors
         Camera();
-        Camera(float aRatio, int iWidth, float vHeight, float fLength, Point3 cCenter);
+        Camera(float aRatio, int iWidth, float vHeight, float fLength, Point3 cCenter, int samplesPer);
 
         // Public Methods
         void render(const Surface &surface);
