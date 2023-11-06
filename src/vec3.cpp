@@ -28,12 +28,12 @@ float Vec3::getZ() const {
     return e[2];
 }
 
+
+// Vector Operations
 float Vec3::operator[](const int i) {
     return e[i];
 }
 
-
-// Vector Operations
 Vec3 Vec3::operator-() const {
     return Vec3(-e[0], -e[1], -e[2]);
 }
@@ -83,6 +83,30 @@ float Vec3::length() const {
     return sqrt(lengthSquared());
 }
 
+Vec3 Vec3::randomVector() {
+    return Vec3(randomFloat(), randomFloat(), randomFloat());
+}
+
+Vec3 Vec3::randomVector(float min, float max) {
+    return Vec3(randomFloat(min, max), randomFloat(min, max), randomFloat(min, max));
+}
+
+float Vec3::dot(const Vec3 &u, const Vec3 &v) {
+    return u.getX() * v.getX() + u.getY() * v.getY() + u.getZ() * v.getZ();
+}
+
+Vec3 Vec3::cross(const Vec3 &u, const Vec3 &v) {
+    return Vec3(u.getY() * v.getZ() - u.getZ() * v.getY(), u.getZ() * v.getX() - u.getX() * v.getZ(), u.getX() * v.getY() - u.getY() * v.getX());
+}
+
+Vec3 Vec3::unitVector(const Vec3 &v) {
+    return v / v.length();
+}
+
+Vec3 Vec3::randomUnitVector() {
+    return unitVector(randomVector(-1, 1));
+}
+
 
 // The non-member function << needs access to Vec3's private members
 ostream& operator<<(ostream &stream, Vec3 &v) {
@@ -114,18 +138,4 @@ Vec3 operator*(const Vec3 &u, const Vec3 &v) {
 
 Vec3 operator/(const Vec3 &v, float s) {
     return Vec3(v.e[0] / s, v.e[1] / s, v.e[2] / s);
-}
-
-
-// Other non-member functions
-float dot(const Vec3 &u, const Vec3 &v) {
-    return u.getX() * v.getX() + u.getY() * v.getY() + u.getZ() * v.getZ();
-}
-
-Vec3 cross(const Vec3 &u, const Vec3 &v) {
-    return Vec3(u.getY() * v.getZ() - u.getZ() * v.getY(), u.getZ() * v.getX() - u.getX() * v.getZ(), u.getX() * v.getY() - u.getY() * v.getX());
-}
-
-Vec3 unitVector(const Vec3 &v) {
-    return v / v.length();
 }

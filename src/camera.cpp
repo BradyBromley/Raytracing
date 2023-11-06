@@ -1,20 +1,7 @@
 #include "camera.h"
 
 // Constructors
-Camera::Camera() {
-    aspectRatio = 1.0;
-    imageWidth = 100;
-    imageHeight = static_cast<int>(imageWidth / aspectRatio);
-    imageHeight = (imageHeight < 1) ? 1 : imageHeight;
-
-    viewportHeight = 2.0;
-    viewportWidth = viewportHeight * (static_cast<float>(imageWidth) / imageHeight);
-    focalLength = 1.0;
-    cameraCenter = Point3(0, 0, 0);
-    samplesPerPixel = 10;
-}
-
-Camera::Camera(float aRatio, int iWidth, float vHeight, float fLength, Point3 cCenter, int samples) {
+Camera::Camera(float aRatio, int iWidth, float vHeight, float fLength, Point3 cCenter, int samples, int depth) {
     aspectRatio = aRatio;
     imageWidth = iWidth;
     imageHeight = static_cast<int>(imageWidth / aspectRatio);
@@ -25,6 +12,7 @@ Camera::Camera(float aRatio, int iWidth, float vHeight, float fLength, Point3 cC
     focalLength = fLength;
     cameraCenter = cCenter;
     samplesPerPixel = samples;
+    maxDepth = depth;
 }
 
 
@@ -44,27 +32,43 @@ void Camera::initialize() {
     pixelOrigin = viewportOrigin + (pixelU/2) + (pixelV/2);
 }
 
-Colour3 Camera::rayColour(const Ray &r, const Surface &s) {
+Colour3 Camera::rayColour(const Ray &r, const Surface &s, int depth) {
 
-    // Colour the ray based on the normal where it intersects the surface
+    // Return a black pixel if the max recursion depth is reached
+    if (depth <= 0) {
+        return Colour3(0.0, 0.0, 0.0);
+    }
+
+    // The ray gets its colour by recursively bouncing off of the objects in the scene
     HitRecord record;
-    if (s.intersect(r, Interval(0, infinity), record)) {
-        return 0.5 * (record.normal + Colour3(1,1,1));
+    if (s.intersect(r, Interval(0.001, infinity), record)) {
+        // Lambertian distribution of rays
+        // The ray gets reflected in the direction of the surface normal + a random unit vector
+        Vec3 rayDirection = record.normal + Vec3::randomUnitVector();
+        return 0.5 * rayColour(Ray(record.point, rayDirection), s, depth - 1);
     }
 
     // Set the background colour
-    Vec3 unitDirection = unitVector(r.getDirection());
+    Vec3 unitDirection = Vec3::unitVector(r.getDirection());
     float a = 0.5*(unitDirection.getY() + 1.0);
     return Colour3(1.0, 1.0, 1.0)*(1.0 - a) + Colour3(0.5, 0.7, 1.0)*(a);
+}
+
+float Camera::linearToGamma(float linearComponent) {
+    // Gamma correct the image
+    return sqrt(linearComponent);
 }
 
 void Camera::writeColour(ofstream &imageFile, const Colour3 &pixelColour) {
     // Make sure that the colour has values in [0, 1)
     Interval interval(0.000, 0.999);
+    float r = interval.clamp(linearToGamma(pixelColour.getX()));
+    float g = interval.clamp(linearToGamma(pixelColour.getY()));
+    float b = interval.clamp(linearToGamma(pixelColour.getZ()));
 
-    imageFile << static_cast<int>(maxColour*interval.clamp(pixelColour.getX()))
-    << ' ' << static_cast<int>(maxColour*interval.clamp(pixelColour.getY()))
-    << ' ' << static_cast<int>(maxColour*interval.clamp(pixelColour.getZ()))
+    imageFile << static_cast<int>(maxColour*r)
+    << ' ' << static_cast<int>(maxColour*g)
+    << ' ' << static_cast<int>(maxColour*b)
     << '\n';
 }
 
@@ -106,7 +110,7 @@ void Camera::render(const Surface& surface) {
             Colour3 cumulativeColour(0,0,0);
             for (int sample = 0; sample < samplesPerPixel; ++sample) {
                 Ray r = getRay(i, j);
-                cumulativeColour += rayColour(r, surface);
+                cumulativeColour += rayColour(r, surface, maxDepth);
             }
             writeColour(imageFile, cumulativeColour/samplesPerPixel);
         }

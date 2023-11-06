@@ -3,6 +3,7 @@
 
 // Headers
 #include <iostream>
+#include "utility.h"
 
 // Using
 using namespace std;
@@ -21,9 +22,9 @@ class Vec3 {
         float getX() const;
         float getY() const;
         float getZ() const;
-        float operator[](int i);
 
         // Vector Operations
+        float operator[](int i);
         Vec3 operator-() const;
         Vec3 operator+=(const Vec3 &v);
         Vec3 operator-=(const Vec3 &v);
@@ -34,7 +35,13 @@ class Vec3 {
         // Other Methods
         float lengthSquared() const;
         float length() const;
-
+        static Vec3 randomVector();
+        static Vec3 randomVector(float min, float max);
+        static float dot(const Vec3 &u, const Vec3 &v);
+        static Vec3 cross(const Vec3 &u, const Vec3 &v);
+        static Vec3 unitVector(const Vec3 &v);
+        static Vec3 randomUnitVector();
+        
         // The non-member function << needs access to Vec3's private members
         friend ostream& operator<<(ostream &stream, Vec3 &v);
 
@@ -50,10 +57,5 @@ class Vec3 {
 // Aliases
 using Point3 = Vec3;
 using Colour3 = Vec3;
-
-// Functions
-float dot(const Vec3 &u, const Vec3 &v);
-Vec3 cross(const Vec3 &u, const Vec3 &v);
-Vec3 unitVector(const Vec3 &v);
 
 #endif
