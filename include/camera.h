@@ -9,8 +9,7 @@
 #include "ray.h"
 #include "hitRecord.h"
 #include "surface.h"
-#include "sphere.h"
-#include "surfaceList.h"
+#include "material.h"
 
 // Using
 using namespace std;

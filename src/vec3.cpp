@@ -83,6 +83,10 @@ float Vec3::length() const {
     return sqrt(lengthSquared());
 }
 
+bool Vec3::nearZero() const {
+    return (fabs(e[0]) < 1e-8) && (fabs(e[1]) < 1e-8) && (fabs(e[2]) < 1e-8);
+}
+
 Vec3 Vec3::randomVector() {
     return Vec3(randomFloat(), randomFloat(), randomFloat());
 }
@@ -105,6 +109,10 @@ Vec3 Vec3::unitVector(const Vec3 &v) {
 
 Vec3 Vec3::randomUnitVector() {
     return unitVector(randomVector(-1, 1));
+}
+
+Vec3 Vec3::reflectedVector(const Vec3 &v, const Vec3 &n) {
+    return v - 2*(dot(v, n))*n;
 }
 
 

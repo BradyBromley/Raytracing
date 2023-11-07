@@ -2,18 +2,33 @@
 #include "utility.h"
 #include "vec3.h"
 #include "ray.h"
+#include "camera.h"
+
 #include "surface.h"
 #include "sphere.h"
 #include "surfaceList.h"
-#include "camera.h"
+
+#include "material.h"
+#include "lambertian.h"
+#include "metallic.h"
 
 using namespace std;
 
 int main() {
+
+    // Materials
+    shared_ptr<Lambertian> material_ground = make_shared<Lambertian>(Colour3(0.3, 0.3, 0.1));
+    shared_ptr<Lambertian> material_center = make_shared<Lambertian>(Colour3(0.7, 0.3, 0.3));
+    shared_ptr<Metallic> material_left = make_shared<Metallic>(Colour3(0.8, 0.8, 0.8));
+    shared_ptr<Metallic> material_right = make_shared<Metallic>(Colour3(0.8, 0.6, 0.2));
+
+
     // Surface
     SurfaceList sList;
-    sList.add(make_shared<Sphere>(Point3(0,0,-1), 0.5));
-    sList.add(make_shared<Sphere>(Point3(0,-100.5,-1), 100));
+    sList.add(make_shared<Sphere>(Point3(0.0,-100.5,-1.0), 100.0, material_ground));
+    sList.add(make_shared<Sphere>(Point3(0.0,0.0,-1.0), 0.5, material_center));
+    sList.add(make_shared<Sphere>(Point3(-1.0,0.0,-1.0), 0.5, material_left));
+    sList.add(make_shared<Sphere>(Point3(1.0,0.0,-1.0), 0.5, material_right));
 
     Camera camera(16.0 / 9.0, 400, 2.0, 1.0, Point3(0, 0, 0), 100, 50);
     camera.render(sList);

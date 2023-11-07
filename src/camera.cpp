@@ -42,10 +42,10 @@ Colour3 Camera::rayColour(const Ray &r, const Surface &s, int depth) {
     // The ray gets its colour by recursively bouncing off of the objects in the scene
     HitRecord record;
     if (s.intersect(r, Interval(0.001, infinity), record)) {
-        // Lambertian distribution of rays
-        // The ray gets reflected in the direction of the surface normal + a random unit vector
-        Vec3 rayDirection = record.normal + Vec3::randomUnitVector();
-        return 0.5 * rayColour(Ray(record.point, rayDirection), s, depth - 1);
+        Colour3 attenuation;
+        Ray scatteredRay;
+        record.material->scatter(r, record, attenuation, scatteredRay);
+        return attenuation * rayColour(scatteredRay, s, depth - 1);
     }
 
     // Set the background colour

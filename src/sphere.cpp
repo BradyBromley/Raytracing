@@ -8,9 +8,10 @@ Sphere::Sphere() {
     radius = 1.0;
 }
 
-Sphere::Sphere(const Point3 &c, float r) {
+Sphere::Sphere(const Point3 &c, float r, shared_ptr<Material> m) {
     center = c;
     radius = r;
+    material = m;
 }
 
 
@@ -55,6 +56,7 @@ bool Sphere::intersect(const Ray &r, Interval interval, HitRecord &record) const
     record.t = smallestRoot;
     record.point = r.at(smallestRoot);
     record.setFaceNormal(r, Vec3::unitVector(r.at(smallestRoot) - center));
+    record.material = material;
 
     return true;
 }

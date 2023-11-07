@@ -7,6 +7,7 @@
 #include "hitRecord.h"
 #include "surface.h"
 #include "interval.h"
+#include "material.h"
 
 // Using
 using namespace std;
@@ -16,11 +17,12 @@ class Sphere : public Surface {
     private:
         Point3 center;
         float radius;
+        shared_ptr<Material> material;
     public:
 
         // Constructors
         Sphere();
-        Sphere(const Point3 &c, float r);
+        Sphere(const Point3 &c, float r, shared_ptr<Material> m);
 
         // Getters
         Point3 getCenter() const;

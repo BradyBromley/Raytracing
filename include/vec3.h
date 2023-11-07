@@ -35,12 +35,14 @@ class Vec3 {
         // Other Methods
         float lengthSquared() const;
         float length() const;
+        bool nearZero() const;
         static Vec3 randomVector();
         static Vec3 randomVector(float min, float max);
         static float dot(const Vec3 &u, const Vec3 &v);
         static Vec3 cross(const Vec3 &u, const Vec3 &v);
         static Vec3 unitVector(const Vec3 &v);
         static Vec3 randomUnitVector();
+        static Vec3 reflectedVector(const Vec3 &v, const Vec3 &n);
         
         // The non-member function << needs access to Vec3's private members
         friend ostream& operator<<(ostream &stream, Vec3 &v);
