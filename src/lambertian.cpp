@@ -7,7 +7,7 @@ Lambertian::Lambertian(const Colour3 &c) {
 
 
 // Other Methods
-void Lambertian::scatter(const Ray &ray, const HitRecord &record, Colour3 &attenuation, Ray &scatteredRay) const {
+bool Lambertian::scatter(const Ray &ray, const HitRecord &record, Colour3 &attenuation, Ray &scatteredRay) const {
     // The ray gets reflected in the direction of the surface normal + a random unit vector
     Vec3 scatterDirection = record.normal + Vec3::randomUnitVector();
 
@@ -18,5 +18,5 @@ void Lambertian::scatter(const Ray &ray, const HitRecord &record, Colour3 &atten
     scatteredRay = Ray(record.point, scatterDirection);
     // Attenuation is the reduction in light intensity of the ray after being reflected
     attenuation = albedo;
-    return;
+    return true;
 }

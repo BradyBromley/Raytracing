@@ -19,8 +19,8 @@ int main() {
     // Materials
     shared_ptr<Lambertian> material_ground = make_shared<Lambertian>(Colour3(0.3, 0.3, 0.1));
     shared_ptr<Lambertian> material_center = make_shared<Lambertian>(Colour3(0.7, 0.3, 0.3));
-    shared_ptr<Metallic> material_left = make_shared<Metallic>(Colour3(0.8, 0.8, 0.8));
-    shared_ptr<Metallic> material_right = make_shared<Metallic>(Colour3(0.8, 0.6, 0.2));
+    shared_ptr<Metallic> material_left = make_shared<Metallic>(Colour3(0.8, 0.8, 0.8), 0.3);
+    shared_ptr<Metallic> material_right = make_shared<Metallic>(Colour3(0.8, 0.6, 0.2), 1.0);
 
 
     // Surface

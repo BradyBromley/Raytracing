@@ -12,7 +12,7 @@ using namespace std;
 // Class
 class Material {
     public:
-        virtual void scatter(const Ray &ray, const HitRecord &record, Colour3 &attenuation, Ray &scatteredRay) const = 0;
+        virtual bool scatter(const Ray &ray, const HitRecord &record, Colour3 &attenuation, Ray &scatteredRay) const = 0;
 
 };
 

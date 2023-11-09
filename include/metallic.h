@@ -15,12 +15,13 @@ class Metallic : public Material {
     private:
         // The albedo is the fraction of light that is reflected
         Colour3 albedo;
+        float fuzz;
     public:
         // Constructors
-        Metallic(const Colour3 &c);
+        Metallic(const Colour3 &c, const float f = 1.0);
 
         // Other Methods
-        void scatter(const Ray &ray, const HitRecord &record, Colour3 &attenuation, Ray &scatteredRay) const override;
+        bool scatter(const Ray &ray, const HitRecord &record, Colour3 &attenuation, Ray &scatteredRay) const override;
 };
 
 #endif

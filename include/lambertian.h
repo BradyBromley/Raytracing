@@ -20,7 +20,7 @@ class Lambertian : public Material {
         Lambertian(const Colour3 &c);
 
         // Other Methods
-        void scatter(const Ray &ray, const HitRecord &record, Colour3 &attenuation, Ray &scatteredRay) const override;
+        bool scatter(const Ray &ray, const HitRecord &record, Colour3 &attenuation, Ray &scatteredRay) const override;
 };
 
 #endif

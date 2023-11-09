@@ -44,8 +44,10 @@ Colour3 Camera::rayColour(const Ray &r, const Surface &s, int depth) {
     if (s.intersect(r, Interval(0.001, infinity), record)) {
         Colour3 attenuation;
         Ray scatteredRay;
-        record.material->scatter(r, record, attenuation, scatteredRay);
-        return attenuation * rayColour(scatteredRay, s, depth - 1);
+        if (record.material->scatter(r, record, attenuation, scatteredRay)) {
+            return attenuation * rayColour(scatteredRay, s, depth - 1);
+        }
+        return Colour3(0.0, 0.0, 0.0);
     }
 
     // Set the background colour
