@@ -119,7 +119,7 @@ Vec3 Vec3::refractedVector(const Vec3 &v, const Vec3 &n, const float etaOverEtaP
     // Get the perpendicular and parallel portions of the refracted ray, and then combine them
     float cosTheta = fmin(dot(-v, n), 1.0);
     Vec3 refractedRayPerpendicular = etaOverEtaPrime * (v + cosTheta*n);
-    Vec3 refractedRayParallel = -sqrt(fabs(1 - refractedRayPerpendicular.lengthSquared()))*n;
+    Vec3 refractedRayParallel = -sqrt(fabs(1.0 - refractedRayPerpendicular.lengthSquared()))*n;
     return refractedRayPerpendicular + refractedRayParallel;
 }
 

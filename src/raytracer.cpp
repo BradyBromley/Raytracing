@@ -19,17 +19,18 @@ int main() {
 
     // Materials
     shared_ptr<Lambertian> material_ground = make_shared<Lambertian>(Colour3(0.3, 0.3, 0.1));
-    shared_ptr<Dielectric> material_center = make_shared<Dielectric>(1.5);
+    shared_ptr<Lambertian> material_center = make_shared<Lambertian>(Colour3(0.1, 0.2, 0.5));
     shared_ptr<Dielectric> material_left = make_shared<Dielectric>(1.5);
-    shared_ptr<Metallic> material_right = make_shared<Metallic>(Colour3(0.8, 0.6, 0.2), 1.0);
+    shared_ptr<Metallic> material_right = make_shared<Metallic>(Colour3(0.8, 0.6, 0.2), 0.8);
 
 
     // Surface
     SurfaceList sList;
-    sList.add(make_shared<Sphere>(Point3(0.0,-100.5,-1.0), 100.0, material_ground));
-    sList.add(make_shared<Sphere>(Point3(0.0,0.0,-1.0), 0.5, material_center));
-    sList.add(make_shared<Sphere>(Point3(-1.0,0.0,-1.0), 0.5, material_left));
-    sList.add(make_shared<Sphere>(Point3(1.0,0.0,-1.0), 0.5, material_right));
+    sList.add(make_shared<Sphere>(Point3(0.0, -100.5, -1.0), 100.0, material_ground));
+    sList.add(make_shared<Sphere>(Point3(0.0, 0.0, -1.0), 0.5, material_center));
+    sList.add(make_shared<Sphere>(Point3(-1.0, 0.0, -1.0), 0.5, material_left));
+    sList.add(make_shared<Sphere>(Point3(-1.0, 0.0, -1.0), -0.4, material_left));
+    sList.add(make_shared<Sphere>(Point3(1.0, 0.0, -1.0), 0.5, material_right));
 
     Camera camera(16.0 / 9.0, 400, 2.0, 1.0, Point3(0, 0, 0), 100, 50);
     camera.render(sList);

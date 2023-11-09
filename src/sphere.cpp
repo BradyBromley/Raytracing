@@ -4,7 +4,7 @@
 
 // Constructors
 Sphere::Sphere() {
-    center = Point3();
+    center = Point3(0.0, 0.0, 0.0);
     radius = 1.0;
 }
 
@@ -33,7 +33,7 @@ bool Sphere::intersect(const Ray &r, Interval interval, HitRecord &record) const
     // a dot product of a vector with itself is the length squared
     // If b = 2*halfB, then 2's can be factored out of the quadratic equation
     float a = r.getDirection().lengthSquared();
-    float halfB = Vec3::dot(r.getDirection(), rayPointMinusSphereCenter);
+    float halfB = Vec3::dot(rayPointMinusSphereCenter, r.getDirection());
     float c = rayPointMinusSphereCenter.lengthSquared() - (radius * radius);
     float discriminant = (halfB * halfB) - (a * c);
 
@@ -55,7 +55,7 @@ bool Sphere::intersect(const Ray &r, Interval interval, HitRecord &record) const
     // Record where the ray hit, the normal at that point, and the t value used
     record.t = smallestRoot;
     record.point = r.at(smallestRoot);
-    record.setFaceNormal(r, Vec3::unitVector(r.at(smallestRoot) - center));
+    record.setFaceNormal(r, (record.point - center) / radius);
     record.material = material;
 
     return true;

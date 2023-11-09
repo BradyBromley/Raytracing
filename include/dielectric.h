@@ -15,6 +15,9 @@ class Dielectric : public Material {
     private:
         // The index of refraction (how much it refracts) depends on the material being hit
         float indexOfRefraction;
+
+        // Private Methods
+        static float schlickApproximation(float cos, float refractionRatio);
     public:
         // Constructors
         Dielectric(const float i);
