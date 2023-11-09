@@ -115,6 +115,14 @@ Vec3 Vec3::reflectedVector(const Vec3 &v, const Vec3 &n) {
     return v - 2*(dot(v, n))*n;
 }
 
+Vec3 Vec3::refractedVector(const Vec3 &v, const Vec3 &n, const float etaOverEtaPrime) {
+    // Get the perpendicular and parallel portions of the refracted ray, and then combine them
+    float cosTheta = fmin(dot(-v, n), 1.0);
+    Vec3 refractedRayPerpendicular = etaOverEtaPrime * (v + cosTheta*n);
+    Vec3 refractedRayParallel = -sqrt(fabs(1 - refractedRayPerpendicular.lengthSquared()))*n;
+    return refractedRayPerpendicular + refractedRayParallel;
+}
+
 
 // The non-member function << needs access to Vec3's private members
 ostream& operator<<(ostream &stream, Vec3 &v) {

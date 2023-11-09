@@ -43,6 +43,7 @@ class Vec3 {
         static Vec3 unitVector(const Vec3 &v);
         static Vec3 randomUnitVector();
         static Vec3 reflectedVector(const Vec3 &v, const Vec3 &n);
+        static Vec3 refractedVector(const Vec3 &v, const Vec3 &n, const float etaOverEtaPrime);
         
         // The non-member function << needs access to Vec3's private members
         friend ostream& operator<<(ostream &stream, Vec3 &v);

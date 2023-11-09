@@ -11,6 +11,7 @@
 #include "material.h"
 #include "lambertian.h"
 #include "metallic.h"
+#include "dielectric.h"
 
 using namespace std;
 
@@ -18,8 +19,8 @@ int main() {
 
     // Materials
     shared_ptr<Lambertian> material_ground = make_shared<Lambertian>(Colour3(0.3, 0.3, 0.1));
-    shared_ptr<Lambertian> material_center = make_shared<Lambertian>(Colour3(0.7, 0.3, 0.3));
-    shared_ptr<Metallic> material_left = make_shared<Metallic>(Colour3(0.8, 0.8, 0.8), 0.3);
+    shared_ptr<Dielectric> material_center = make_shared<Dielectric>(1.5);
+    shared_ptr<Dielectric> material_left = make_shared<Dielectric>(1.5);
     shared_ptr<Metallic> material_right = make_shared<Metallic>(Colour3(0.8, 0.6, 0.2), 1.0);
 
 
