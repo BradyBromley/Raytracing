@@ -5,4 +5,4 @@ This raytracer can render one type of object (spheres) and 3 types of materials 
 
 The camera for the raytracer can also be manipulated. The aspect ratio, field of view, depth of field, and camera location are all parameters for the camera class.
 
-![alt text](images/image.ppm)
+![alt text](images/image.png)
