@@ -20,9 +20,11 @@ int main() {
     // Surface
     SurfaceList sList;
 
+    // Create the ground
     shared_ptr<Lambertian> materialGround = make_shared<Lambertian>(Colour3(0.5, 0.5, 0.5));
     sList.add(make_shared<Sphere>(Point3(0, -1000, 0), 1000, materialGround));
 
+    // Create many small spheres
     for (int a = -11; a < 11; a++) {
         for (int b = -11; b < 11; b++) {
             float chooseMat = randomFloat();
@@ -48,6 +50,7 @@ int main() {
         }
     }
 
+    // Create three large spheres
     shared_ptr<Lambertian> materialLambertian = make_shared<Lambertian>(Colour3(0.4, 0.2, 0.1));
     sList.add(make_shared<Sphere>(Point3(-4, 1, 0), 1.0, materialLambertian));
 

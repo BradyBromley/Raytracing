@@ -128,7 +128,7 @@ void Camera::render(const Surface& surface) {
 
     // Open the image file and define ASCII colours, width, height, and max color
     ofstream imageFile;
-    imageFile.open("../img/image.ppm");
+    imageFile.open("../images/image.ppm");
     imageFile << "P3\n" << imageWidth << ' ' << imageHeight << '\n' << maxColour << '\n';
 
     // Draw the image
