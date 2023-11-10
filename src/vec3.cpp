@@ -111,6 +111,15 @@ Vec3 Vec3::randomUnitVector() {
     return unitVector(randomVector(-1, 1));
 }
 
+Vec3 Vec3::randomInUnitDisk() {
+    while (true) {
+        Vec3 point = Vec3(randomFloat(-1,1), randomFloat(-1,1), 0);
+        if (point.lengthSquared() < 1) {
+            return point;
+        }
+    }
+}
+
 Vec3 Vec3::reflectedVector(const Vec3 &v, const Vec3 &n) {
     return v - 2*(dot(v, n))*n;
 }

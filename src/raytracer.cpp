@@ -16,39 +16,49 @@
 using namespace std;
 
 int main() {
-
-    // Materials
-    shared_ptr<Lambertian> material_ground = make_shared<Lambertian>(Colour3(0.3, 0.3, 0.1));
-    shared_ptr<Lambertian> material_center = make_shared<Lambertian>(Colour3(0.1, 0.2, 0.5));
-    shared_ptr<Dielectric> material_left = make_shared<Dielectric>(1.5);
-    shared_ptr<Metallic> material_right = make_shared<Metallic>(Colour3(0.8, 0.6, 0.2), 0.8);
-
-
+    
     // Surface
     SurfaceList sList;
-    sList.add(make_shared<Sphere>(Point3(0.0, -100.5, -1.0), 100.0, material_ground));
-    sList.add(make_shared<Sphere>(Point3(0.0, 0.0, -1.0), 0.5, material_center));
-    sList.add(make_shared<Sphere>(Point3(-1.0, 0.0, -1.0), 0.5, material_left));
-    sList.add(make_shared<Sphere>(Point3(-1.0, 0.0, -1.0), -0.4, material_left));
-    sList.add(make_shared<Sphere>(Point3(1.0, 0.0, -1.0), 0.5, material_right));
 
-    Camera camera(16.0 / 9.0, 400, 2.0, 1.0, Point3(0, 0, 0), 100, 50);
+    shared_ptr<Lambertian> materialGround = make_shared<Lambertian>(Colour3(0.5, 0.5, 0.5));
+    sList.add(make_shared<Sphere>(Point3(0, -1000, 0), 1000, materialGround));
+
+    for (int a = -11; a < 11; a++) {
+        for (int b = -11; b < 11; b++) {
+            float chooseMat = randomFloat();
+            Point3 center(a + 0.9*randomFloat(), 0.2, b + 0.9*randomFloat());
+
+            if ((center - Point3(4, 0.2, 0)).length() > 0.9) {
+                shared_ptr<Material> material;
+
+                if (chooseMat < 0.8) {
+                    // Lambertian
+                    material = make_shared<Lambertian>(Colour3::randomVector() * Colour3::randomVector());
+                    sList.add(make_shared<Sphere>(center, 0.2, material));
+                } else if (chooseMat < 0.95) {
+                    // Metallic
+                    material = make_shared<Metallic>(Colour3::randomVector(0.5, 1), randomFloat(0, 0.5));
+                    sList.add(make_shared<Sphere>(center, 0.2, material));
+                } else {
+                    // Dielectric
+                    material = make_shared<Dielectric>(1.5);
+                    sList.add(make_shared<Sphere>(center, 0.2, material));
+                }
+            }
+        }
+    }
+
+    shared_ptr<Lambertian> materialLambertian = make_shared<Lambertian>(Colour3(0.4, 0.2, 0.1));
+    sList.add(make_shared<Sphere>(Point3(-4, 1, 0), 1.0, materialLambertian));
+
+    shared_ptr<Metallic> materialMetallic = make_shared<Metallic>(Colour3(0.7, 0.6, 0.5), 0.6);
+    sList.add(make_shared<Sphere>(Point3(4, 1, 0), 1.0, materialMetallic));
+
+    shared_ptr<Dielectric> materialDielectric = make_shared<Dielectric>(1.5);
+    sList.add(make_shared<Sphere>(Point3(0, 1, 0), 1.0, materialDielectric));
+
+    Camera camera(16.0 / 9.0, 1200, 20, 50, 20, Point3(13, 2, 3), Point3(0,0,0), Vec3(0,1,0), 0.6, 10.0);
     camera.render(sList);
-
-    Point3 v1(4,5,6);
-    Point3 v2(10,20,30);
-    cout << v1;
-    cout << v2;
-
-    Ray r1;
-    Ray r2(v1, v2);
-    Vec3 v3 = r1.at(1);
-    Vec3 v4 = r2.at(1);
-    cout << v3;
-    cout << v4;
-
-    cout << randomFloat() << endl;
-    cout << randomFloat() << endl;
 
     return 0;
 }

@@ -10,3 +10,7 @@ float randomFloat(float min, float max) {
     // Random number from [min, max)
     return min + (max-min)*randomFloat();
 }
+
+float degreesToRadians(float degrees) {
+    return degrees * pi / 180.0;
+}

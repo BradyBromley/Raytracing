@@ -42,6 +42,7 @@ class Vec3 {
         static Vec3 cross(const Vec3 &u, const Vec3 &v);
         static Vec3 unitVector(const Vec3 &v);
         static Vec3 randomUnitVector();
+        static Vec3 randomInUnitDisk();
         static Vec3 reflectedVector(const Vec3 &v, const Vec3 &n);
         static Vec3 refractedVector(const Vec3 &v, const Vec3 &n, const float etaOverEtaPrime);
         

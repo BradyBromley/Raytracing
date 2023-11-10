@@ -1,35 +1,56 @@
 #include "camera.h"
 
 // Constructors
-Camera::Camera(float aRatio, int iWidth, float vHeight, float fLength, Point3 cCenter, int samples, int depth) {
+Camera::Camera(float aRatio, int iWidth, int samples, int depth, float fov, Point3 center, Point3 target, Vec3 vUp, float angle, float distance) {
     aspectRatio = aRatio;
     imageWidth = iWidth;
-    imageHeight = static_cast<int>(imageWidth / aspectRatio);
-    imageHeight = (imageHeight < 1) ? 1 : imageHeight;
-
-    viewportHeight = vHeight;
-    viewportWidth = viewportHeight * (static_cast<float>(imageWidth) / imageHeight);
-    focalLength = fLength;
-    cameraCenter = cCenter;
     samplesPerPixel = samples;
     maxDepth = depth;
+    
+    // Camera location and orientation
+    verticalFov = fov;
+    cameraLocation = center;
+    targetLocation = target;
+    viewUp = vUp;
+
+    defocusAngle = angle;
+    focusDistance = distance;
 }
 
 
 // Private Methods
 void Camera::initialize() {
+    imageHeight = static_cast<int>(imageWidth / aspectRatio);
+    imageHeight = (imageHeight < 1) ? 1 : imageHeight;
+
+    // Determine viewport dimensions
+    float theta = degreesToRadians(verticalFov);
+    float h = tan(theta/2);
+    float viewportHeight = 2.0 * h * focusDistance;
+    float viewportWidth = viewportHeight * (static_cast<float>(imageWidth) / imageHeight);
+    
+    // Calculate u,v,w unit basis vectors for the camera coordinate frame
+    w = Vec3::unitVector(cameraLocation - targetLocation);
+    u = Vec3::unitVector(Vec3::cross(viewUp, w));
+    v = Vec3::unitVector(Vec3::cross(w, u));
+
     // These are the vectors across the viewport's edges
     // Since the y-axis for the viewport goes from top to bottom, it is negative
-    viewportU = Vec3(viewportWidth, 0, 0);
-    viewportV = Vec3(0, -viewportHeight, 0);
+    Vec3 viewportU = viewportWidth * u;
+    Vec3 viewportV = viewportHeight * -v;
 
     // These are the vectors across the edges of a single pixel
     pixelU = viewportU / imageWidth;
     pixelV = viewportV / imageHeight;
 
     // Calculate the location of the top left pixel (The center of the pixel is needed)
-    Point3 viewportOrigin = cameraCenter - (viewportU/2) - (viewportV/2) - Point3(0, 0, focalLength);
+    Point3 viewportOrigin = cameraLocation - (viewportU/2) - (viewportV/2) - (focusDistance * w);
     pixelOrigin = viewportOrigin + (pixelU/2) + (pixelV/2);
+
+    // Calculate the camera defocus disk basis vectors
+    float defocusRadius = focusDistance * tan(degreesToRadians(defocusAngle/2));
+    defocusDiskU = u * defocusRadius;
+    defocusDiskV = v * defocusRadius;
 }
 
 Colour3 Camera::rayColour(const Ray &r, const Surface &s, int depth) {
@@ -81,14 +102,22 @@ Vec3 Camera::pixelSampleSquare() const {
     return (x*pixelU) + (y*pixelV);
 }
 
+Point3 Camera::defocusDiskSample() const {
+    // Return a random point in the defocus disk
+    Vec3 point = Vec3::randomInUnitDisk();
+    Vec3 point2 = cameraLocation + (point[0] * defocusDiskU) + (point[1] * defocusDiskV);
+    return cameraLocation + (point[0] * defocusDiskU) + (point[1] * defocusDiskV);
+}
+
 Ray Camera::getRay(int i, int j) const {
     // Find the center of the the pixel that the ray goes through
     Point3 pixelCenter = pixelOrigin + (i*pixelU) + (j*pixelV);
     // Add some randomness so that every sample is slightly different
     Point3 pixelSample = pixelCenter + pixelSampleSquare();
 
-    Vec3 rayDirection = pixelSample - cameraCenter;
-    return Ray(cameraCenter, rayDirection);
+    Point3 rayOrigin = (defocusAngle <= 0) ? cameraLocation : defocusDiskSample();
+    Vec3 rayDirection = pixelSample - rayOrigin;
+    return Ray(rayOrigin, rayDirection);
 
 }
 

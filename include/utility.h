@@ -16,5 +16,6 @@ const float pi = 3.14159265358979;
 // Functions
 float randomFloat();
 float randomFloat(float min, float max);
+float degreesToRadians(float degrees);
 
 #endif
