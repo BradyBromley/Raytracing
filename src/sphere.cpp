@@ -15,16 +15,6 @@ Sphere::Sphere(const Point3 &c, float r, shared_ptr<Material> m) {
 }
 
 
-// Getters
-Point3 Sphere::getCenter() const {
-    return center;
-}
-
-float Sphere::getRadius() const {
-    return radius;
-}
-
-
 // Other Methods
 bool Sphere::intersect(const Ray &r, Interval interval, HitRecord &record) const {
     Vec3 rayPointMinusSphereCenter = r.getPoint() - center;

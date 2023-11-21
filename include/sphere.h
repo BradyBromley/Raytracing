@@ -24,10 +24,6 @@ class Sphere : public Surface {
         Sphere();
         Sphere(const Point3 &c, float r, shared_ptr<Material> m);
 
-        // Getters
-        Point3 getCenter() const;
-        float getRadius() const;
-
         // Other Methods
         bool intersect(const Ray &r, Interval interval, HitRecord &record) const override;
 };

@@ -6,6 +6,7 @@
 
 #include "surface.h"
 #include "sphere.h"
+#include "cube.h"
 #include "surfaceList.h"
 
 #include "material.h"
@@ -25,7 +26,7 @@ int main() {
     sList.add(make_shared<Sphere>(Point3(0, -1000, 0), 1000, materialGround));
 
     // Create many small spheres
-    for (int a = -11; a < 11; a++) {
+    /*for (int a = -11; a < 11; a++) {
         for (int b = -11; b < 11; b++) {
             float chooseMat = randomFloat();
             Point3 center(a + 0.9*randomFloat(), 0.2, b + 0.9*randomFloat());
@@ -48,19 +49,26 @@ int main() {
                 }
             }
         }
-    }
+    }*/
 
     // Create three large spheres
     shared_ptr<Lambertian> materialLambertian = make_shared<Lambertian>(Colour3(0.4, 0.2, 0.1));
     sList.add(make_shared<Sphere>(Point3(-4, 1, 0), 1.0, materialLambertian));
 
-    shared_ptr<Metallic> materialMetallic = make_shared<Metallic>(Colour3(0.7, 0.6, 0.5), 0.6);
+    shared_ptr<Metallic> materialMetallic = make_shared<Metallic>(Colour3(0.3, 0.6, 0.5), 0.6);
     sList.add(make_shared<Sphere>(Point3(4, 1, 0), 1.0, materialMetallic));
 
     shared_ptr<Dielectric> materialDielectric = make_shared<Dielectric>(1.5);
     sList.add(make_shared<Sphere>(Point3(0, 1, 0), 1.0, materialDielectric));
 
-    Camera camera(16.0 / 9.0, 1200, 20, 50, 20, Point3(13, 2, 3), Point3(0,0,0), Vec3(0,1,0), 0.6, 10.0);
+    shared_ptr<Lambertian> materialLambertian2 = make_shared<Lambertian>(Colour3(0.8, 0.3, 0.3));
+    shared_ptr<Metallic> materialMirror = make_shared<Metallic>(Colour3(0.7, 0.6, 0.5), 0.0);
+    shared_ptr<Dielectric> materialDiamond = make_shared<Dielectric>(2.4);
+    sList.add(make_shared<Cube>(Point3(0, 0.5, 1), 0.5, materialLambertian2));
+    sList.add(make_shared<Cube>(Point3(0, 1.3, -4), 1.3, materialMirror));
+    sList.add(make_shared<Cube>(Point3(5.5, 0.3, 0), 0.3, materialDiamond));
+
+    Camera camera(16.0 / 9.0, 1200, 20, 50, 45, Point3(13, 2, 3), Point3(0,0,0), Vec3(0,1,0), 0.6, 10.0);
     camera.render(sList);
 
     return 0;

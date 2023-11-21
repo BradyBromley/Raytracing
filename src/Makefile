@@ -10,11 +10,11 @@ CFLAGS=-I$(IDIR)
 
 # The cpp files are dependent on these include files
 # patsubst adds the directory structure before the filename
-_DEPS= vec3.h ray.h utility.h interval.h hitRecord.h surface.h surfaceList.h sphere.h camera.h material.h lambertian.h metallic.h dielectric.h
+_DEPS= vec3.h ray.h utility.h interval.h hitRecord.h surface.h surfaceList.h sphere.h cube.h camera.h material.h lambertian.h metallic.h dielectric.h
 DEPS=$(patsubst %,$(IDIR)/%,$(_DEPS))
 
 # The object files
-_OBJ=raytracer.o vec3.o ray.o utility.o interval.o hitRecord.o surfaceList.o sphere.o camera.o lambertian.o metallic.o dielectric.o
+_OBJ=raytracer.o vec3.o ray.o utility.o interval.o hitRecord.o surfaceList.o sphere.o cube.o camera.o lambertian.o metallic.o dielectric.o
 OBJ=$(patsubst %,$(ODIR)/%,$(_OBJ))
 
 # -c means generate the object file
