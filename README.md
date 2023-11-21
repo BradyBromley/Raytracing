@@ -12,4 +12,6 @@ The three types of materials are Lambertian, Metallic, and Dielectric. Lambertia
 ## Camera
 The camera for the raytracer can also be manipulated. The aspect ratio, field of view, depth of field, and camera location are all parameters for the camera class.
 
-![alt text](images/image.png)
+![alt text](images/spheres.png)
+
+![alt text](images/shapes.png)
